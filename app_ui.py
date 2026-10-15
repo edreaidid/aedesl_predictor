@@ -9,18 +9,24 @@ st.title("🦟 Aedes Breeding Ground Predictor")
 st.write("Enter target parameters below to predict the next breeding location coordinates using the trained Random Forest model.")
 
 # Load the saved model artifact
+
 MODEL_PATH = 'aedes_random_forest_model.joblib'
+
+@st.cache_resource
+def load_model_artifact(path):
+    return joblib.load(path)
+
 if not os.path.exists(MODEL_PATH):
     st.error(f"Model file '{MODEL_PATH}' was not found. Please upload it alongside this script.")
 else:
-    # Load components safely
-    artifact = joblib.load(MODEL_PATH)
+    artifact = load_model_artifact(MODEL_PATH)
     model = artifact['model']
     label_encoders = artifact['label_encoders']
     translation_dict = artifact['translation_dict']
     categorical_cols = artifact['categorical_cols']
     target_col = artifact['target_col']
     feature_cols = artifact['feature_cols']
+
 
     # Setup UI Form inputs
     st.subheader("Observation Features")
